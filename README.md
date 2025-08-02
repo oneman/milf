@@ -1,8 +1,11 @@
 # milf
-Government Email Server
+Email Server
 
-## auto vibe engage brain shell
+## How to make and run this program
 
-smtpitcpip4p25+465
+./configure ; make ; sudo ./milf;./configure ; make ; sudo ./milf
+./configure ; make ; sudo ./milf;./configure ; make ; sudo ./milf
 
-We bind() and listen(), read(byte), write(OK), etc
+###
+
+ok
