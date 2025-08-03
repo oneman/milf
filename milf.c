@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
       sd = accept(ev.data.fd, &sin, &slen);
       if (sd == -1) { printf("acceptfail: %s\n", strerror(errno)); }
       printf("new customer: %d\n", sd);
-      write(sd, "220 OK rad \n\r", 13);
+      write(sd, "220 OK rad \r\n", 13);
     }
     if ((ev.events == EPOLLIN) && (ev.data.fd > 5)) {
       for (int r = 4096; r == 4096;) {
@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
         if (r < 1) { printf("readfail: %d\n", r); }
         int w = write(1, buf, r);
         if (w != r) { printf("writefail: %d != %d\n", w, r); }
-        write(sd, "250 OK rad \n\r", 13);
+        write(sd, "250 OK rad \r\n", 13);
       }
     }
   }
