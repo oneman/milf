@@ -11,7 +11,7 @@ int main(int argc, char **argv) {
   struct addrinfo *rp;
   for (int p = 25; p <= 465; p += 440) {
     mset(&hints, 0, sizeof (struct addrinfo));
-    hints.ai_family = AF_UNSPEC;
+    hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
     if (p == 25) ret = getaddrinfo(NULL, "25", &hints, &result);
@@ -41,13 +41,18 @@ int main(int argc, char **argv) {
       struct sockaddr sin;
       socklen_t slen = sizeof(sin);
       sd = accept(ev.data.fd, &sin, &slen);
-      if (sd == -1) { printf("acceptfail: %s\n", strerror(errno)); return 7; }
-      printf("a new customer has arrived: %d\n", sd);
+      if (sd == -1) { printf("acceptfail: %s\n", strerror(errno)); }
+      printf("new customer: %d\n", sd);
+      write(sd, "220 OK rad \n\r", 13);
     }
     if ((ev.events == EPOLLIN) && (ev.data.fd > 5)) {
-      int r = read(ev.data.fd, buf, 4096);
-      if (r < 1) { printf("readfail: %d\n", r); }
-      printf("%*s\n", r, buf);
+      for (int r = 4096; r == 4096;) {
+        r = read(ev.data.fd, buf, r);
+        if (r < 1) { printf("readfail: %d\n", r); }
+        int w = write(1, buf, r);
+        if (w != r) { printf("writefail: %d != %d\n", w, r); }
+        write(sd, "250 OK rad \n\r", 13);
+      }
     }
   }
   return 1;
