@@ -51,7 +51,11 @@ int main(int argc, char **argv) {
         if (r < 1) { printf("readfail: %d\n", r); }
         int w = write(1, buf, r);
         if (w != r) { printf("writefail: %d != %d\n", w, r); }
-        write(sd, "250 OK rad \r\n", 13);
+        if (buf[0] == 'D') {
+          write(sd, "354 OK rad \r\n", 13);
+        } else { 
+          write(sd, "250 OK rad \r\n", 13);
+        }
       }
     }
   }
