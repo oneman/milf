@@ -95,12 +95,16 @@ void parse(int sz, char *dat) {
   if (ns + aas) printf("%u ns %u aas\n", ns, aas);
   char label[64];
   int pos = 12;
-  for (int i = qs; i < qs; i++) {
+  for (int i = 0; i < qs; i++) {
     for (;;) {
       if (pos > sz) break;
       int len = dat[pos];
-      if (!len) break;
-      printf("len %d ", len);
+      if (!len) { pos = pos + 1; break; }
+      printf("len %d pos %d (len + pos = %d) sz %d", len, pos, len + pos, sz);
+      if ((len > 63) || ((len + pos) > sz)) {
+        printf("tooo len\n");
+        return;
+      }
       pos++;
       zero(label, 45);
       cp(label, &dat[pos], len);
