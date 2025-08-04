@@ -90,7 +90,47 @@ void parse(int sz, char *dat) {
       zero(label, 45);
       cp(label, &dat[pos], len);
       pos += len;
-      printf("label %*s\n", len, label);
+      printf("label %*s", len, label);
+      u16 type;
+      u16 class;
+      if (pos + 4 > sz) { printf("nobytesfortypeclass\n"); return; }
+      revcp(&type, &dat[pos], 2);
+      pos = pos + 2;
+      revcp(&class, &dat[pos], 2);
+      pos = pos + 2;
+      switch (type) {
+        case 1:
+          printf(" A ");
+          break;
+        case 2:
+          printf(" NS ");
+          break;
+        case 5:
+          printf(" CNAME ");
+        break;
+        case 6:
+          printf(" SOA ");
+          break;
+        case 15:
+          printf(" MX ");
+          break;
+        case 16:
+          printf(" TXT ");
+          break;
+        case 28:
+          printf(" AAAA ");
+        break;
+        case 225:
+          printf(" * ");
+          break;
+        printf(" ERROR ");
+        return;
+      }
+      printf("\n");
+      if (class != 1) {
+        printf("not internet class\n");
+        return;
+      }
     }
   }
 }
