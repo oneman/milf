@@ -60,7 +60,15 @@ int main(int argc, char **argv) {
     if ((ev.events == EPOLLIN) && (ev.data.fd > 4)) {
       for (int r = 4096; r == 4096;) {
         r = read(ev.data.fd, buf, r);
-        if (r < 1) { printf("readfail: %d\n", r); }
+        if (r < 1) {
+          if (r == -1) printf("readfail: %s\n", strerror(errno));
+          printf("read: %d from %d we close\n", r, ev.data.fd);
+          ret = epoll_ctl(epfd, EPOLL_CTL_DEL, ev.data.fd, NULL);
+          if (ret) { printf("epoll_ctlfail: %s\n", strerror(errno)); return 9; }
+          ret = close(ev.data.fd);
+          if (ret) { printf("closefail: %s\n", strerror(errno)); return 13; }
+          break;
+        }
         watbuf(r, buf);
         int w = write(1, buf, r);
         if (w != r) { printf("writefail: %d != %d\n", w, r); }
