@@ -56,6 +56,7 @@ int main(int argc, char **argv) {
       for (int r = 4096; r == 4096;) {
         r = read(ev.data.fd, buf, r);
         if (r < 1) { printf("readfail: %d\n", r); }
+        watbuf(r, buf);
         int w = write(1, buf, r);
         if (w != r) { printf("writefail: %d != %d\n", w, r); }
         if (buf[0] == 'D') {

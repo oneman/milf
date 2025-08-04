@@ -54,3 +54,22 @@ u64 revcp(void *dst, void *src, u64 sz) {
   for (n = 0; n < sz; n++) dp[n] = sp[(sz - 1) - n];
   return sz;
 }
+
+void watbuf(int sz, char *dat) {
+  for (int i = 0; i < sz; i++) {
+    printf("%-8d ", i);
+    u8 byte = dat[i];
+    for (u8 b = 0b10000000;b != 0; b = b >> 1) {
+      if (byte & b) {
+        printf("1");
+      } else {
+        printf("0");
+      }
+    }
+    printf(" %3u", byte);
+    if (isprint(byte)) {
+      printf(" %c", byte);
+    }
+    printf("\n");
+  }  
+}

@@ -47,30 +47,10 @@ subformats:
 
   \256\205\  1\  0\0\1\0\0\0\0\0\0\nradcompany\2us\0\0\34\0\1           len=31
   \256\205\201\200\0\1\0\0\0\1\0\0\nradcompany\2us\0\0\34\0\1\300
-
-
 */
 
-void printpacket(int sz, char *dat) {
-  for (int i = 0; i < sz; i++) {
-    u8 byte = dat[i];
-    for (u8 b = 0b10000000;b != 0; b = b >> 1) {
-      if (byte & b) {
-        printf("1");
-      } else {
-        printf("0");
-      }
-    }
-    printf(" %3u", byte);
-    if (isprint(byte)) {
-      printf(" %c", byte);
-    }
-    printf("\n");
-  }  
-}
-
 void parse(int sz, char *dat) {
-  printpacket(sz, dat);
+  watbuf(sz, dat);
   if (sz < 12) return;
   u16 id;
   u16 qs;
@@ -88,9 +68,10 @@ void parse(int sz, char *dat) {
   }
   if ((dat[3] & 0b10000000) == 0b10000000) {
     printf("%u query %u response ", qs, as);
-    if ((dat[4] & 0b00001111) != 0b00000000) {
-      printf("error! ");
-    }
+  }
+  if ((dat[4] & 0b00001111) != 0b00000000) {
+    printf("error! ");
+    return;
   }
   if (ns + aas) printf("%u ns %u aas\n", ns, aas);
   char label[64];
