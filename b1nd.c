@@ -73,7 +73,7 @@ void parse(int sz, char *dat) {
     printf("error! ");
     return;
   }
-  if (ns + aas) printf("%u ns %u aas\n", ns, aas);
+  if (ns + aas) printf("%u ns %u aas ", ns, aas);
   char label[64];
   int pos = 12;
   for (int i = 0; i < qs; i++) {
@@ -81,8 +81,8 @@ void parse(int sz, char *dat) {
       if (pos > sz) break;
       int len = dat[pos];
       if (!len) { pos = pos + 1; break; }
-      printf("len %d pos %d (len + pos = %d) sz %d", len, pos, len + pos, sz);
       if ((len > 63) || ((len + pos) > sz)) {
+        printf("len %d pos %d (len + pos = %d) sz %d", len, pos, len + pos, sz);
         printf("tooo len\n");
         return;
       }
@@ -90,7 +90,8 @@ void parse(int sz, char *dat) {
       zero(label, 45);
       cp(label, &dat[pos], len);
       pos += len;
-      printf("label %*s", len, label);
+      printf(" %*s", len, label);
+    }
       u16 type;
       u16 class;
       if (pos + 4 > sz) { printf("nobytesfortypeclass\n"); return; }
@@ -131,7 +132,7 @@ void parse(int sz, char *dat) {
         printf("not internet class\n");
         return;
       }
-    }
+    
   }
 }
 

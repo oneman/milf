@@ -9,7 +9,8 @@ int main(int argc, char **argv) {
   struct addrinfo hints;
   struct addrinfo *result;
   struct addrinfo *rp;
-  for (int p = 25; p <= 465; p += 440) {
+  //for (int p = 25; p <= 465; p += 440) {
+  for (int p = 25; p <= 25; p += 440) {  
     mset(&hints, 0, sizeof (struct addrinfo));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
@@ -44,15 +45,19 @@ int main(int argc, char **argv) {
   for (;;) {
     ret = epoll_wait(epfd, &ev, 1, 0);
     if (ret) { printf("epoll_wait %d\n", ret); }
-    if ((ev.events == EPOLLIN) && (ev.data.fd < 6)) {
+    if ((ev.events == EPOLLIN) && (ev.data.fd < 5)) {
       struct sockaddr sin;
       socklen_t slen = sizeof(sin);
       sd = accept(ev.data.fd, &sin, &slen);
       if (sd == -1) { printf("acceptfail: %s\n", strerror(errno)); }
       printf("new customer: %d\n", sd);
       write(sd, "220 OK rad \r\n", 13);
+      ev.events = EPOLLIN;
+      ev.data.fd = sd;
+      ret = epoll_ctl(epfd, EPOLL_CTL_ADD, sd, &ev);
+      if (ret) { printf("epoll_ctlfail: %s\n", strerror(errno)); return 6; }
     }
-    if ((ev.events == EPOLLIN) && (ev.data.fd > 5)) {
+    if ((ev.events == EPOLLIN) && (ev.data.fd > 4)) {
       for (int r = 4096; r == 4096;) {
         r = read(ev.data.fd, buf, r);
         if (r < 1) { printf("readfail: %d\n", r); }
