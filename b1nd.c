@@ -44,9 +44,6 @@ subformats:
  soa
  mx:       0x0001 | <domain-name>
  txt: 
- 
-IPPROTO_TCP TCP_NODELAY
-
 
 */
 
