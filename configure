@@ -1,7 +1,5 @@
 #!/bin/sh
+sudo chown root milf
 sudo chmod +s milf
+sudo chown root b1nd
 sudo chmod +s b1nd
-sudo chmod +s milf_gcc
-sudo chmod +s b1nd_gcc
-sudo chmod +s milf_clang
-sudo chmod +s b1nd_clang

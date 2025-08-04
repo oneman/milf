@@ -20,6 +20,13 @@ int main(int argc, char **argv) {
     for (rp = result; rp != NULL; rp = rp->ai_next) {
       sd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
       if (sd == -1) { printf("socketfail: %s\n", strerror(errno)); return 3; }
+      const int one = 1;
+      if (setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, (const void *)&one, 4)) {
+        printf("setsockoptfail: %s\n", strerror(errno)); return 9;
+      }
+      if (setsockopt(sd, IPPROTO_TCP, TCP_NODELAY, (const void *)&one, 4)) {
+        printf("setsockoptfail: %s\n", strerror(errno)); return 9;
+      }
       ret = bind(sd, rp->ai_addr, rp->ai_addrlen);
       if (ret) { printf("bindfail: %s\n", strerror(errno)); return 4; }
       ret = listen(sd, 26);

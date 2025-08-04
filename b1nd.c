@@ -45,6 +45,9 @@ subformats:
  mx:       0x0001 | <domain-name>
  txt: 
  
+IPPROTO_TCP TCP_NODELAY
+
+
 */
 
 int main(int argc, char **argv) {
@@ -63,6 +66,10 @@ int main(int argc, char **argv) {
   s->sin_addr.s_addr = htonl(INADDR_ANY);
   int sd = socket(s->sin_family, SOCK_DGRAM, 0);
   if (sd == -1) { printf("socketfail: %s\n", strerror(errno)); return 3; }
+  const int one = 1;
+  if (setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, (const void *)&one, 4)) {
+    printf("setsockoptfail: %s\n", strerror(errno)); return 9;
+  }
   ret = bind(sd, &saddr, sizeof(struct sockaddr_in));
   if (ret) { printf("bindfail: %s\n", strerror(errno)); return 4; }
   ev.events = EPOLLIN;
