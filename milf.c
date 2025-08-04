@@ -43,9 +43,16 @@ int main(int argc, char **argv) {
   }
   char buf[4096];
   for (;;) {
-    ret = epoll_wait(epfd, &ev, 1, 0);
-    if (ret) { printf("epoll_wait %d\n", ret); }
-    if ((ev.events == EPOLLIN) && (ev.data.fd < 5)) {
+    ret = epoll_wait(epfd, &ev, 1, -1);
+    if (ret == -1) {
+      printf("epoll_waitfail: %s\n", strerror(errno));
+      return 15;
+    }
+    if (ret == 0) {
+      printf("epoll_wait %d\n", ret);
+      continue;
+    }
+    if ((ev.events & EPOLLIN) && (ev.data.fd < 5)) {
       struct sockaddr sin;
       socklen_t slen = sizeof(sin);
       sd = accept(ev.data.fd, &sin, &slen);
@@ -57,7 +64,7 @@ int main(int argc, char **argv) {
       ret = epoll_ctl(epfd, EPOLL_CTL_ADD, sd, &ev);
       if (ret) { printf("epoll_ctlfail: %s\n", strerror(errno)); return 6; }
     }
-    if ((ev.events == EPOLLIN) && (ev.data.fd > 4)) {
+    if ((ev.events & EPOLLIN) && (ev.data.fd > 4)) {
       for (int r = 4096; r == 4096;) {
         r = read(ev.data.fd, buf, r);
         if (r < 1) {
