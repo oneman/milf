@@ -37,3 +37,19 @@ u64 mset(void *buf, const char b, u64 sz) {
   for (n = 0; n < sz; n++) bp[n] = b;
   return sz;
 }
+
+u64 cp(void *dst, void *src, u64 sz) {
+  u64 n = 0;
+  char *sp = (char *)src;
+  char *dp = (char *)dst;
+  for (n = 0; n < sz; n++) dp[n] = sp[n];
+  return sz;
+}
+
+u64 revcp(void *dst, void *src, u64 sz) {
+  u64 n = 0;
+  char *sp = (char *)src;
+  char *dp = (char *)dst;
+  for (n = 0; n < sz; n++) dp[n] = sp[(sz - 1) - n];
+  return sz;
+}
