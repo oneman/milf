@@ -24,6 +24,13 @@ typedef int64_t i64;
 typedef size_t usize;
 typedef ssize_t isize;
 
+u64 zero(void *buf, u64 sz) {
+  u64 n = 0;
+  char *bp = (char *)buf;
+  for (n = 0; n < sz; n++) bp[n] = 0;
+  return sz;
+}
+
 u64 mset(void *buf, const char b, u64 sz) {
   u64 n = 0;
   char *bp = (char *)buf;
