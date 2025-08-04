@@ -10,7 +10,7 @@ int main(int argc, char **argv) {
   struct addrinfo *result;
   struct addrinfo *rp;
   //for (int p = 25; p <= 465; p += 440) {
-  for (int p = 25; p <= 25; p += 440) {  
+  for (int p = 25; p <= 25; p += 440) {
     mset(&hints, 0, sizeof (struct addrinfo));
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
@@ -73,9 +73,9 @@ int main(int argc, char **argv) {
         int w = write(1, buf, r);
         if (w != r) { printf("writefail: %d != %d\n", w, r); }
         if (buf[0] == 'D') {
-          write(sd, "354 OK rad \r\n", 13);
+          write(ev.data.fd, "354 OK rad \r\n", 13);
         } else { 
-          write(sd, "250 OK rad \r\n", 13);
+          write(ev.data.fd, "250 OK rad \r\n", 13);
         }
       }
     }
