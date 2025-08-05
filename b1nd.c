@@ -87,7 +87,7 @@ void parse(int sz, char *dat) {
         return;
       }
       pos++;
-      zero(label, 45);
+      zero(label, 64);
       cp(label, &dat[pos], len);
       pos += len;
       printf(" %*s", len, label);
@@ -121,18 +121,29 @@ void parse(int sz, char *dat) {
         case 28:
           printf(" AAAA ");
         break;
-        case 225:
+        case 255:
           printf(" * ");
           break;
         printf(" ERROR ");
         return;
       }
       printf("\n");
-      if (class != 1) {
-        printf("not internet class\n");
-        return;
+      if (class == 3) {
+        printf("choas class\n");
       }
-    
+      if (class == 1) {
+        printf("internet class\n");
+      }
+      if (class == 255) {
+        printf("* class\n");
+      }
+      if ((class != 1) && (class != 3) && (class != 255)) {
+        printf("unknown class\n");
+      }
+  }
+  for (int i = 0; i < as; i++) {
+    if (pos > sz) break;
+    printf("");
   }
 }
 
